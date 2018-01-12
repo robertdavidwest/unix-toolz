@@ -13,6 +13,6 @@ default_params_sets = {
         'pre': 's3://rmdy-analytics-lds-out/logs/11.20.2017/transform/',
         'run-time':  '2018-01-10_15.26.14', # 'use-latest'
         'after-time': '/completed/'
-    }
+    },
 }
     

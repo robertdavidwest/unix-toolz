@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+import sys
+import pandas as pd
+
+def preview_csv(path):
+    df = pd.read_csv(path, dtype='str')
+    print(df.head())
+
+if __name__ == '__main__':
+
+    s3path = sys.argv[1]
+    preview_csv(s3path)
