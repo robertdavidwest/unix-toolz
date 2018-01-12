@@ -20,11 +20,15 @@ def get_files(params):
     params: dict
         should have the keys 'pre' and 'after-time'
     """
-    raw_times = [f.split("/")[-1] for f in s3.ls(params['pre'])]
-    datetimes = pd.to_datetime(pd.Series(raw_times), format="%Y-%m-%d_%H.%M.%S")
-    most_recent_str = datetimes.max().strftime("%Y-%m-%d_%H.%M.%S")
+    if params['run-time'] == 'use-latest':
+        raw_times = [f.split("/")[-1] for f in s3.ls(params['pre'])]
+        datetimes = pd.to_datetime(pd.Series(raw_times), format="%Y-%m-%d_%H.%M.%S")
+        most_recent_str = datetimes.max().strftime("%Y-%m-%d_%H.%M.%S")
 
-    next_pre = params['pre'] + most_recent_str + params['after-time']
+        next_pre = params['pre'] + most_recent_str + params['after-time']
+    
+    else:
+        next_pre = params['pre'] + params['run-time'] + params['after-time']
 
     files = s3.ls(next_pre)
     return files
