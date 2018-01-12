@@ -9,7 +9,7 @@ from s3fs_patch import s3
 from config import default_params_sets
 
 
-def preview_file(params):
+def get_files(params):
     """
     s3 bucket files paths are expected to have this format:
 
@@ -27,7 +27,10 @@ def preview_file(params):
     next_pre = params['pre'] + most_recent_str + params['after-time']
 
     files = s3.ls(next_pre)
-    filepath = files[int(file_number)]
+    return files
+
+
+def preview_file(filepath):
     with s3.open(filepath, 'rb') as f:
         contents = f.read()
         print(colored(contents, 'yellow'))
@@ -58,5 +61,10 @@ if __name__ == '__main__':
         raise AssertionError("{} does not match any available param sets" \
                 " available sets are: {}".format(param_key, 
                                                  default_params_sets.keys()))
+    files = get_files(params)
+    filepath = files[int(file_number)]
 
-    preview_file(params)
+    if params['job'] == 'preview':
+        preview_file(filepath)
+    elif params['job'] == 'count':
+        print(len(files))
