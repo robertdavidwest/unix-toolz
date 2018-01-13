@@ -30,8 +30,11 @@ def get_files(params):
     else:
         next_pre = params['pre'] + params['run-time'] + params['after-time']
 
-    files = s3.ls(next_pre)
-    return files
+    try:
+        files = s3.ls(next_pre)
+        return files
+    except s3fs.core.FileNotFoundError:
+        print("No {} files found".format(params['after-time'].replace("/","")))
 
 
 def preview_file(filepath):
@@ -70,5 +73,7 @@ if __name__ == '__main__':
 
     if params['job'] == 'preview':
         preview_file(filepath)
+        print("total files: ")
+        print(len(files))
     elif params['job'] == 'count':
         print(len(files))
